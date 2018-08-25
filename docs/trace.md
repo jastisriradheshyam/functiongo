@@ -5,7 +5,7 @@
 ### TraceLog
 TraceLog is the function which shows the filename, line number and function name of the function from which function "TraceLog" is called.  
 In other words : To get the function name, filename, filename from where "TraceLog" called in source code   
-__Format__ : "Filename: file_name | Line  Number: line_number | Function: function_name"    
+__Format__ : "Filename: file_name | Line: line_number | Function: function_name"    
 
 #### __Example__
 
