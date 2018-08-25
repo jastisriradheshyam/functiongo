@@ -20,7 +20,7 @@
 //
 // MIT License : https://opensource.org/licenses/MIT
 
-package function_name
+package functiongo
 
 // Get the fucntion name that called this fucntion
 // @args levelArg ...int `to set the level (depth of stack) for that function name`
