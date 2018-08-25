@@ -10,4 +10,4 @@ Function name will return function name of the function from which the function 
 `go get github.com/jastisriradheshyam/functiongo/`
 
 ### Importing the package
-`import fn "github.com/jastisriradheshyam/functiongo/"
+`import fn "github.com/jastisriradheshyam/functiongo/"`
