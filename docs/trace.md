@@ -19,7 +19,7 @@ import (
 )
 func main() {
 	fmt.Println("hello, world\n")
-	fn.TraceLog()
+	fmt.Println(fn.TraceLog())
 }
 ```
 
