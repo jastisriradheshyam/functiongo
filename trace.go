@@ -1,4 +1,4 @@
-// Copyright 2018 Jasti Sri Radhe Shyam
+// Copyright 2018-2019 Jasti Sri Radhe Shyam
 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -54,4 +54,79 @@ func TraceLog() string {
 	fn := strings.Split(frame.Function, ".")
 	// Return the filename, line number, and function name in formatted string
 	return fmt.Sprintf("Filename :%s | Line :%d | Function :%s", frame.File, frame.Line, fn[len(fn)-1])
+}
+
+// StackTrace .
+func StackTrace() string {
+	// we get the callers as uintptrs - but we just need 2 or more for Frames to work
+	fpcs := make([]uintptr, 2)
+	stackTrace := "StackTrace" + "\n"
+	var fpcsIterator = 2
+	for {
+		// 2nd level to get to the caller of whoever called TraceLog()
+		n := runtime.Callers(fpcsIterator, fpcs)
+		// Check if pc have data
+		if n == 0 {
+			return "-"
+		}
+		// Get the frames for program counter range
+		frames := runtime.CallersFrames(fpcs[:n])
+		// Get the frame
+		frame, _ := frames.Next()
+		stackTrace += fmt.Sprintf("Filename :%s | Line :%d | Function :%s", frame.File, frame.Line, frame.Function) + "\n"
+		if frame.Function == "runtime.goexit" {
+			return stackTrace
+		}
+		fpcsIterator++
+	}
+
+	// Get the function name
+	// For example:
+	// main.(*ABC).MyFunc --> MyFunc  (with Structure)
+	// main.MyFunc --> MyFunc  (Without Structure)
+	//fn := strings.Split(frame.Function, ".")
+	// Return the filename, line number, and function name in formatted string
+	//return
+}
+
+// StackTraceRaw .
+func StackTraceRaw() []Trace {
+	traceArray := []Trace{}
+	// we get the callers as uintptrs - but we just need 2 or more for Frames to work
+	fpcs := make([]uintptr, 2)
+	var fpcsIterator = 2
+	for {
+		trace := Trace{}
+		// 2nd level to get to the caller of whoever called TraceLog()
+		n := runtime.Callers(fpcsIterator, fpcs)
+		// Check if pc have data
+		if n == 0 {
+			return traceArray
+		}
+		// Get the frames for program counter range
+		frames := runtime.CallersFrames(fpcs[:n])
+		// Get the frame
+		frame, _ := frames.Next()
+		trace.File = frame.File
+		trace.Line = frame.Line
+		trace.Function = frame.Function
+		// Get the function name
+		// For example:
+		// main.(*ABC).MyFunc --> MyFunc  (with Structure)
+		// main.MyFunc --> MyFunc  (Without Structure)
+		functionElements := strings.Split(frame.Function, ".")
+		functionElementsLen := len(functionElements)
+		trace.FunctionName = functionElements[functionElementsLen-1]
+		trace.Package = functionElements[0]
+		if functionElementsLen == 3 {
+			trace.Interface = functionElements[1]
+		} else {
+			trace.Interface = ""
+		}
+		traceArray = append(traceArray, trace)
+		if frame.Function == "runtime.goexit" {
+			return traceArray
+		}
+		fpcsIterator++
+	}
 }
